@@ -63,10 +63,15 @@ public class nfactorialBigramCode {
         BigramAndCharMap(filePath);
         List<String> names = Files.readAllLines(Path.of(filePath), StandardCharsets.UTF_8);
         int choose = 0;
-        String name = "";
+        String name;
         while(choose != 5){
-            System.out.println("Choose a function:\n1.Generate Name.\n2.Generate New Name." +
-                    "\n3.See probabilities.\n4.End.\nChoose: ");
+            System.out.println("""
+                    Choose a function:
+                    1.Generate Name.
+                    2.Generate New Name.
+                    3.See probabilities.
+                    4.End.
+                    Choose:\s""");
             choose = scan.nextInt();
             if(choose==1){
                 name = generateNameThroughBigramChar();
@@ -85,12 +90,13 @@ public class nfactorialBigramCode {
                 System.out.println(name);
             }
             else if(choose==3) {
-                System.out.println("Choose for what you wanna see probability:" +
-                        "\n1.For a specific character probability." +
-                        "\n2.For all characters probability" +
-                        "\n3.For first character probability" +
-                        "\n4.Back." +
-                        "\nChoose: ");
+                System.out.println("""
+                        Choose for what you wanna see probability:
+                        1.For a specific character probability.
+                        2.For all characters probability
+                        3.For first character probability
+                        4.Back.
+                        Choose:\s""");
                 choose = scan.nextInt();
                 if(choose==1){
                     System.out.println("Name which character: ");
