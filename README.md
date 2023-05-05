@@ -7,7 +7,6 @@ How to run this code
 
 2.Open CMD in filepath where nfactorialBigramCode.java located
 ![image](https://user-images.githubusercontent.com/90651802/236408977-779147cf-b260-42b5-b518-dd8bab633330.png)
-![image](https://user-images.githubusercontent.com/90651802/236409019-a0d0a160-dc24-4b23-8c00-f3fe04d78f80.png)
 ![image](https://user-images.githubusercontent.com/90651802/236409068-91035983-49f2-4c50-a1cb-3916341cbf91.png)
 Enter
 
