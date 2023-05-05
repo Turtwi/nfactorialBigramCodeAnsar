@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class nfactorialBigramCode {
-    public static Map<String, Integer> bigramMap = new HashMap<>();
     public static Map<Character,Map<Character,Integer>> bigramNextCharMap = new HashMap<>();
     public static int sum = 0;
     public static void BigramAndCharMap(String fileName) throws IOException {
@@ -15,38 +14,12 @@ public class nfactorialBigramCode {
             int nameLength = nameBigram.length();
             for (int i = 0; i < nameLength - 1; i++) {
                 String bigram = nameBigram.substring(i, i + 2);
-                bigramMap.put(bigram, bigramMap.getOrDefault(bigram, 0) + 1);
                 char firstChar = bigram.charAt(0);
                 char secondChar = bigram.charAt(1);
                 Map<Character, Integer> secondCharCNT = bigramNextCharMap.computeIfAbsent(firstChar, k -> new HashMap<>());
                 secondCharCNT.put(secondChar, secondCharCNT.getOrDefault(secondChar, 0) +1);
             }
         }
-    }
-
-    public static String generateNameThroughBigram(Map<String, Integer> bigramCounts){
-        StringBuilder name = new StringBuilder();
-        String add = "11";
-        Random random = new Random();
-        while(add.charAt(0) != '^'){
-            Object[] keys =  bigramCounts.keySet().toArray();
-            add = (String) keys[random.nextInt(keys.length)];
-        }
-        name.append(add.charAt(1));
-        while(add.charAt(1) != '$'){
-            Object[] keys =  bigramCounts.keySet().toArray();
-            add = (String) keys[random.nextInt(keys.length)];
-            if(add.charAt(0) == '^'){
-                name.append(add.charAt(1));
-            }
-            else {
-                if(add.charAt(1) != '$'){
-                    name.append(add);
-                }
-            }
-        }
-        name.append(add.charAt(0));
-        return name.toString();
     }
 
     public static String generateNameThroughBigramChar(){
@@ -66,14 +39,9 @@ public class nfactorialBigramCode {
 
         return name.toString();
     }
-    public static void probabilitiesOfBigram(Map<String, Integer> bigramMap){
-        sum = bigramMap.values().stream().mapToInt(Integer::intValue).sum();
-        bigramMap.forEach((key, value) -> System.out.println(key + ": " + String.format("%.5f", (double)value/sum)));
-    }
-
     public static void probabilitiesOfNextChar(Map<Character,Map<Character,Integer>> bigramNextCharMap, char currentChar){
         sum = bigramNextCharMap.get(currentChar).values().stream().mapToInt(Integer::intValue).sum();
-        bigramNextCharMap.get(currentChar).forEach((key, value) -> System.out.println(key + ": " + String.format("%.5f", (double)value/sum)));
+        bigramNextCharMap.get(currentChar).forEach((key, value) -> System.out.print(key + ": " + String.format("%.5f", (double)value/sum) + ", "));
     }
 
     public static char choseNextChar(char currentChar, Map<Character,Map<Character,Integer>> bigramNextCharMap){
@@ -89,13 +57,68 @@ public class nfactorialBigramCode {
     }
 
     public static void main(String[] args) throws IOException {
-        BigramAndCharMap("C:\\Users\\Admin\\IdeaProjects\\Alibek\\src\\names.txt");
-        List<String> names = Files.readAllLines(Path.of("C:\\Users\\Admin\\IdeaProjects\\Alibek\\src\\names.txt"), StandardCharsets.UTF_8);
-        String name = generateNameThroughBigramChar();
-        while (name.length() < 2){
-            name = generateNameThroughBigramChar();
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Write path to database: ");
+        String filePath = scan.next();
+        BigramAndCharMap(filePath);
+        List<String> names = Files.readAllLines(Path.of(filePath), StandardCharsets.UTF_8);
+        int choose = 0;
+        String name = "";
+        while(choose != 5){
+            System.out.println("Choose a function:\n1.Generate Name.\n2.Generate New Name." +
+                    "\n3.See probabilities.\n4.End.\nChoose: ");
+            choose = scan.nextInt();
+            if(choose==1){
+                name = generateNameThroughBigramChar();
+                while(name.length() < 3) {
+                    name = generateNameThroughBigramChar();
+                }
+                name = name.substring(0,1).toUpperCase() + name.substring(1,name.length() -1);
+                System.out.println(name);
+            }
+            else if(choose==2){
+                name = generateNameThroughBigramChar();
+                while(name.length() < 3 && !names.contains(name)) {
+                    name = generateNameThroughBigramChar();
+                }
+                name = name.substring(0,1).toUpperCase() + name.substring(1,name.length() -1);
+                System.out.println(name);
+            }
+            else if(choose==3) {
+                System.out.println("Choose for what you wanna see probability:" +
+                        "\n1.For a specific character probability." +
+                        "\n2.For all characters probability" +
+                        "\n3.For first character probability" +
+                        "\n4.Back." +
+                        "\nChoose: ");
+                choose = scan.nextInt();
+                if(choose==1){
+                    System.out.println("Name which character: ");
+                    String n = scan.next();
+                    n = n.toLowerCase(Locale.ROOT);
+                    probabilitiesOfNextChar(bigramNextCharMap,n.charAt(0));
+                }
+                else if(choose==2) {
+                    String alphabet = "abcdefghijklmnopqrstuvwxyz";
+                    for (int i = 0; i < alphabet.length(); i++){
+                        System.out.println("Next character probability for this character " + alphabet.charAt(i));
+                        probabilitiesOfNextChar(bigramNextCharMap, alphabet.charAt(i));
+                        System.out.println();
+                        System.out.println();
+                    }
+                }
+                else if(choose==3) {
+                    System.out.println("First character probability: ");
+                    probabilitiesOfNextChar(bigramNextCharMap,'^');
+                }
+                else if(choose==4){
+                    choose =8;
+                }
+            }
+            else if(choose==4){
+                break;
+            }
         }
-        System.out.println(name);
-        probabilitiesOfBigram(bigramMap);
+
     }
 }
