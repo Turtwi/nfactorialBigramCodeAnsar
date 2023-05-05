@@ -3,6 +3,8 @@ Mini task from nfactorial Incubator
 
 How to run this code
 
+IMPORTANT YOU WILL NEED Java
+
 1.Download names.txt and nfactorialBigramCode.java
 
 2.Open CMD in filepath where nfactorialBigramCode.java located
